@@ -1,0 +1,93 @@
+bits 16
+
+@define x r1
+@define y r2
+@define xp r3
+@define yp r4
+@define rt r5
+
+mov y 0
+.for_y
+    sub yp y 32
+    bsl yp yp 6
+
+    mov x 0
+    .for_x
+        sub xp x 32
+        bsl xp xp 6
+        sub xp xp 0x200
+
+        psh x
+        psh y
+        cal .iter
+        pop y
+        pop x
+
+        llod r5 .chars rt
+
+        out %text r5
+        out %text r5
+    inc x x
+    brl .for_x x 64
+
+    out %text '\n'
+inc y y
+brl .for_y y 64
+hlt
+
+// takes xp and yp, returns rt
+@define zr r1
+@define zi r2
+@define i rt
+
+.iter
+    mov zr 0
+    mov zi 0
+
+    // for i in 0..15
+    mov i 0
+    .iter_for
+        // a * b = (trunc(a * b) >> 10) | (umlt(a, b) << 6)
+        // z2r = zr * zr - zi * zi
+
+        // zr^2
+        mlt r6 zr zr
+        bsr r6 r6 10
+        sumlt r7 zr zr
+        bsl r7 r7 6
+        or r6 r6 r7
+
+        // zi^2
+        mlt r8 zi zi
+        bsr r8 r8 10
+        sumlt r7 zi zi
+        bsl r7 r7 6
+        or r7 r7 r8
+
+        // if zr^2 + zi^2 > 4.0 { ret }
+        add r8 r6 r7
+        bge .iter_check r8 0x1000
+
+        sub r6 r6 r7 // r6 = z2r
+
+        // z2i = 2 * zr * z.1
+        mlt r8 zr zi
+        bsr r8 r8 10
+        sumlt r7 zr zi
+        bsl r7 r7 6
+        or r7 r7 r8
+        lsh r7 r7 // r7 = z2i
+
+        add zr r6 xp
+        add zi r7 yp
+    inc i i
+    brl .iter_for i 16
+dec i i
+ret
+
+.iter_check
+dec i i
+ret
+
+.chars
+dw " .,ixqeawmIOLSA@"
