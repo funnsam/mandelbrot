@@ -1,6 +1,6 @@
 bits 16
 minreg 8
-minstack 3
+minstack 2
 minheap 0
 
 @define x r1
@@ -22,7 +22,8 @@ mov y 0
 
         psh x
         psh y
-        cal .iter
+        jmp .iter
+        .iter_ret
         pop y
         pop x
 
@@ -68,7 +69,7 @@ hlt
 
         // if zr^2 + zi^2 > 4.0 { ret }
         add r8 r6 r7
-        bge .iter_check r8 0x1000
+        bge .iter_end r8 0x1000
 
         sub r6 r6 r7 // r6 = z2r
 
@@ -84,12 +85,9 @@ hlt
         add zi r7 yp
     inc i i
     brl .iter_for i 16
+.iter_end
 dec i i
-ret
-
-.iter_check
-dec i i
-ret
+jmp .iter_ret
 
 .chars
 dw " .,ixqeawmIOLSA@"
