@@ -28,10 +28,10 @@ fn main() {
     for y in 0..SIZE {
         let y = (y as i16 - SIZE / 2) << (FRAC - LOG + 2);
 
-        for x in 0..SIZE {
-            let x = ((x as i16 - SIZE / 2) << (FRAC - LOG + 2)) - 0x200;
+        for x in 0..SIZE * 2 {
+            let x = ((x as i16 - SIZE) << (FRAC - LOG + 1)) - (1 << (FRAC - 1));
             let c = CHARS[iterate((x, y))] as char;
-            print!("{c}{c}");
+            print!("{c}");
         }
 
         println!("│");

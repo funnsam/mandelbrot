@@ -1,4 +1,7 @@
 bits 16
+minreg 8
+minstack 3
+minheap 0
 
 @define x r1
 @define y r2
@@ -13,8 +16,8 @@ mov y 0
 
     mov x 0
     .for_x
-        sub xp x 32
-        bsl xp xp 6
+        sub xp x 64
+        bsl xp xp 5
         sub xp xp 0x200
 
         psh x
@@ -26,9 +29,8 @@ mov y 0
         llod r5 .chars rt
 
         out %text r5
-        out %text r5
     inc x x
-    brl .for_x x 64
+    brl .for_x x 128
 
     out %text '\n'
 inc y y
