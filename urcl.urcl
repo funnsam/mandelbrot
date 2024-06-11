@@ -12,12 +12,12 @@ minheap 0
 mov y 0
 .for_y
     sub yp y 32
-    bsl yp yp 6
+    bsl yp yp 5
 
     mov x 0
     .for_x
         sub xp x 64
-        bsl xp xp 5
+        bsl xp xp 4
         sub xp xp 0x200
 
         psh x
@@ -33,6 +33,7 @@ mov y 0
     inc x x
     brl .for_x x 128
 
+    out %text '│'
     out %text '\n'
 inc y y
 brl .for_y y 64
@@ -90,4 +91,4 @@ dec i i
 jmp .iter_ret
 
 .chars
-dw " .,ixqeawmIOLSA@"
+dw "            ░▒▓█"

@@ -1,1 +1,6 @@
 /target
+a.out
+urcl.bc
+urcl.ll
+urcl.o
+urcl.opt.*
